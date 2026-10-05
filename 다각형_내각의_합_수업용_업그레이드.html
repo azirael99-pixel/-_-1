@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수업용 | 다각형 내각의 합 탐구</title>
+<style>
+*{box-sizing:border-box} :root{--blue:#196ae3;--blue2:#eef5ff;--ink:#172033;--muted:#68738a;--line:#dfe5ef;--bg:#f5f7fb;--green:#198754;--red:#d14b4b}
+body{margin:0;font-family:"Noto Sans KR","Malgun Gothic",sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#196ae3,#3f86ee);color:white;padding:25px 30px}
+header .tag{display:inline-block;background:rgba(255,255,255,.18);padding:5px 10px;border-radius:20px;font-size:13px;margin-bottom:8px}
+header h1{margin:0;font-size:30px} header p{margin:8px 0 0;opacity:.94}
+main{max-width:1250px;margin:20px auto;padding:0 18px}.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab{border:0;background:white;color:#41506a;padding:11px 18px;border-radius:10px;font-weight:800;cursor:pointer}.tab.active{background:var(--blue);color:white}
+.page{display:none}.page.active{display:block}.grid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.card{background:white;border-radius:18px;padding:22px;box-shadow:0 5px 18px rgba(20,40,80,.07);margin-bottom:18px}.card h2{margin:0 0 12px;font-size:21px}.card h3{margin:18px 0 9px}
+.controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap}input[type=range]{width:min(330px,65vw);accent-color:var(--blue)}
+.nbox{font-size:25px;font-weight:900}canvas{width:100%;height:455px;display:block;background:#fbfcff;border:1px solid var(--line);border-radius:14px;margin-top:12px}
+.observation{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.obsbox{background:#f7f9fc;border:1px solid var(--line);padding:14px;border-radius:12px;text-align:center}
+.obsbox .small{font-size:12px;color:var(--muted)}.obsbox .big{font-size:23px;font-weight:900;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid var(--line);padding:11px;text-align:center}th{background:#f1f5fa}
+td input{width:85px;padding:7px;border:1px solid #cbd4e2;border-radius:7px;text-align:center;font-size:16px}
+button{border:0;border-radius:9px;padding:10px 15px;background:var(--blue);color:white;font-weight:800;cursor:pointer}button.secondary{background:#e9eef7;color:#26344e}
+.feedback{margin-top:10px;min-height:24px;font-weight:800}.question{background:var(--blue2);padding:16px;border-radius:13px;margin:10px 0}
+.answerline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.answerline input{padding:10px;width:140px;border:1px solid #cbd4e2;border-radius:8px;font-size:17px}
+.rulebox{background:#fffdf4;border:1px solid #f0df9e;padding:18px;border-radius:14px}.blank{display:inline-block;border-bottom:2px solid #5e6b80;min-width:90px;text-align:center;padding:0 7px;font-weight:900}
+.formula{font-size:28px;font-weight:900;text-align:center;background:#eef5ff;color:#174c9f;padding:18px;border-radius:14px;margin:14px 0}.steps{list-style:none;padding:0;margin:0}
+.steps li{padding:11px 13px;background:#f7f9fc;border-radius:9px;margin:7px 0}.challenge{border-left:5px solid var(--blue);background:#f7faff;padding:17px;border-radius:10px}
+.teacher{background:#f8f6ff;border:1px solid #e4dcff}.teacher ul{margin:8px 0 0;padding-left:20px}.footer{max-width:1250px;margin:0 auto 25px;padding:0 18px;color:var(--muted);font-size:13px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.observation{grid-template-columns:1fr 1fr}canvas{height:390px}}@media(max-width:520px){.observation{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="tag">중학교 1학년 · 평면도형의 성질</div><h1>🔎 다각형 내각의 합 탐구</h1><p>도형을 삼각형으로 나누어 내각의 합의 규칙을 스스로 발견해 봅시다.</p></header>
+<main>
+<div class="tabs">
+<button class="tab active" onclick="showPage('explore',this)">① 탐구하기</button><button class="tab" onclick="showPage('record',this)">② 기록하기</button><button class="tab" onclick="showPage('generalize',this)">③ 일반화하기</button><button class="tab" onclick="showPage('challenge',this)">④ 도전하기</button><button class="tab" onclick="showPage('teacher',this)">⑤ 교사용 정리</button>
+</div>
+
+<section id="explore" class="page active"><div class="grid">
+<div class="card"><h2>1. 다각형을 삼각형으로 나누어 보자</h2><div class="controls"><strong>꼭짓점의 개수</strong><input id="nRange" type="range" min="3" max="10" value="3"><span class="nbox"><span id="nText">3</span>각형</span></div><p style="color:var(--muted)">한 꼭짓점에서 대각선을 그어 몇 개의 삼각형으로 나뉘는지 관찰하세요.</p><canvas id="canvas" width="760" height="455"></canvas></div>
+<div><div class="card"><h2>👀 지금 보이는 것</h2><div class="observation"><div class="obsbox"><div class="small">변의 수</div><div class="big" id="nVal">3</div></div><div class="obsbox"><div class="small">삼각형 수</div><div class="big" id="triVal">1</div></div><div class="obsbox"><div class="small">내각의 합</div><div class="big" id="sumVal">180°</div></div><div class="obsbox"><div class="small">대각선 수</div><div class="big" id="diagVal">0개</div></div></div><h3>생각해 보기</h3><div class="question"><strong>변의 수가 1개 늘어날 때, 삼각형의 수는 어떻게 변하나요?</strong></div><p>슬라이더를 <strong>3 → 4 → 5 → 6각형</strong>으로 움직이며 확인해 보세요.</p></div>
+<div class="card"><h2>💡 핵심 관찰</h2><ul class="steps"><li>삼각형 1개의 내각의 합은 <strong>180°</strong>입니다.</li><li>한 꼭짓점에서 대각선을 그으면 다각형이 여러 삼각형으로 나뉩니다.</li><li>삼각형의 개수와 내각의 합 사이에 규칙이 있습니다.</li></ul></div></div>
+</div></section>
+
+<section id="record" class="page"><div class="card"><h2>② 탐구 결과 기록하기</h2><p>화면을 관찰하면서 빈칸을 채워 보세요. <strong>정답을 보기 전에 직접 예상</strong>해 봅시다.</p>
+<table><thead><tr><th>다각형</th><th>삼각형의 개수</th><th>내각의 합</th><th>내가 발견한 관계</th></tr></thead><tbody>
+<tr><td>3각형</td><td><input id="t3" type="number"></td><td><input id="s3" type="number"></td><td rowspan="4">삼각형의 수가 변의 수와 어떤 관계가 있는지 생각해 보세요.</td></tr>
+<tr><td>4각형</td><td><input id="t4" type="number"></td><td><input id="s4" type="number"></td></tr><tr><td>5각형</td><td><input id="t5" type="number"></td><td><input id="s5" type="number"></td></tr><tr><td>6각형</td><td><input id="t6" type="number"></td><td><input id="s6" type="number"></td></tr>
+</tbody></table><div style="margin-top:14px"><button onclick="checkTable()">기록 확인하기</button><button class="secondary" onclick="clearTable()">다시 기록하기</button><div id="tableFeedback" class="feedback"></div></div></div>
+<div class="card"><h2>✏️ 규칙을 문장으로 표현하기</h2><div class="rulebox"><p>① n각형은 한 꼭짓점에서 대각선을 그으면</p><p><span class="blank" id="blank1">?</span>개의 삼각형으로 나뉜다.</p><p>② 삼각형 1개의 내각의 합은 180°이므로</p><p>③ n각형의 내각의 합은 <span class="blank" id="blank2">?</span> × 180°이다.</p></div><p style="color:var(--muted)">힌트: 3각형→1개, 4각형→2개, 5각형→3개, 6각형→4개…</p><button onclick="revealRule()">내가 찾은 규칙 확인</button><div id="ruleFeedback" class="feedback"></div></div>
+</section>
+
+<section id="generalize" class="page"><div class="grid"><div class="card"><h2>③ 수학적으로 일반화하기</h2><p>지금까지 관찰한 규칙을 문자 <strong>n</strong>으로 나타내 봅시다.</p><div class="formula">내각의 합 = (n − 2) × 180°</div><ul class="steps"><li>n : 다각형의 <strong>변의 수</strong></li><li>n − 2 : 한 꼭짓점에서 나눈 <strong>삼각형의 수</strong></li><li>180° : 삼각형 한 개의 <strong>내각의 합</strong></li></ul></div>
+<div class="card"><h2>🤔 왜 n−2일까?</h2><p>3각형부터 7각형까지 생각해 봅시다.</p><table><tr><th>다각형</th><th>삼각형 수</th><th>관계</th></tr><tr><td>3각형</td><td>1</td><td>3−2</td></tr><tr><td>4각형</td><td>2</td><td>4−2</td></tr><tr><td>5각형</td><td>3</td><td>5−2</td></tr><tr><td>6각형</td><td>4</td><td>6−2</td></tr><tr><td>7각형</td><td>5</td><td>7−2</td></tr></table><p class="question"><strong>결론:</strong> n각형은 한 꼭짓점에서 대각선을 그으면 <span style="color:var(--blue);font-weight:900">n−2</span>개의 삼각형으로 나뉩니다.</p></div></div></section>
+
+<section id="challenge" class="page"><div class="card"><h2>④ 도전! 새로운 다각형에 적용하기</h2>
+<div class="challenge"><p><strong>문제 1</strong></p><p>8각형의 내각의 합은 몇 도일까요?</p><div class="answerline"><input id="q8" type="number" placeholder="답 입력"> ° <button onclick="checkQ(8,'q8','f8')">확인</button></div><div id="f8" class="feedback"></div></div>
+<div class="challenge" style="margin-top:14px"><p><strong>문제 2</strong></p><p>12각형의 내각의 합은 몇 도일까요?</p><div class="answerline"><input id="q12" type="number" placeholder="답 입력"> ° <button onclick="checkQ(12,'q12','f12')">확인</button></div><div id="f12" class="feedback"></div></div>
+<div class="challenge" style="margin-top:14px"><p><strong>문제 3 · 생각을 확장하기</strong></p><p>내각의 합이 1260°인 다각형은 몇 각형일까요?</p><div class="answerline"><input id="qN" type="number" placeholder="각형"> <button onclick="checkN()">확인</button></div><div id="fN" class="feedback"></div></div></div>
+<div class="card"><h2>🎯 오늘의 한 문장</h2><p>다음 문장을 완성해 보세요.</p><div class="question"><strong>“다각형의 내각의 합은 ________을 이용하여 ________로 나타낼 수 있다.”</strong></div><p style="color:var(--muted)">힌트: 다각형을 무엇으로 나누었나요? 삼각형의 내각의 합은 얼마인가요?</p></div></section>
+
+<section id="teacher" class="page"><div class="card teacher"><h2>👩‍🏫 교사용 수업 정리</h2><h3>수업 핵심 질문</h3><p><strong>“다각형의 내각의 합은 어떻게 결정될까?”</strong></p><h3>권장 45분 흐름</h3>
+<table><tr><th>시간</th><th>단계</th><th>교사 활동</th><th>학생 활동</th></tr><tr><td>5분</td><td>도입</td><td>3·4·5각형의 각을 비교하며 문제 제기</td><td>규칙 예상</td></tr><tr><td>10분</td><td>탐구</td><td>슬라이더 조작 및 발문</td><td>삼각형 분할 관찰</td></tr><tr><td>10분</td><td>기록</td><td>관찰표 작성 안내</td><td>표 작성 및 패턴 발견</td></tr><tr><td>10분</td><td>일반화</td><td>n−2의 의미 질문</td><td>공식 도출</td></tr><tr><td>7분</td><td>적용</td><td>8·12각형 문제 제시</td><td>공식 적용</td></tr><tr><td>3분</td><td>정리</td><td>핵심 문장 완성</td><td>오늘의 발견 공유</td></tr></table>
+<h3>추천 발문</h3><ul><li>“왜 한 꼭짓점에서 대각선을 그어 볼까요?”</li><li>“변의 수가 하나 늘어날 때 삼각형은 몇 개씩 늘어나나요?”</li><li>“n−2에서 ‘−2’는 무엇을 의미할까요?”</li><li>“내각의 합을 직접 측정하지 않고 구할 수 있는 이유는 무엇일까요?”</li><li>“이 규칙이 20각형에도 적용될까요? 왜 그렇게 생각하나요?”</li></ul>
+<h3>학생들이 자주 하는 오류</h3><ul><li>삼각형의 개수를 n−3으로 생각함 → 대각선 개수와 삼각형 개수를 구별하게 함</li><li>n×180°로 계산함 → 삼각형의 개수를 먼저 찾게 함</li><li>공식만 암기함 → “n−2가 왜 나오는가?”를 설명하게 함</li></ul></div></section>
+</main>
+<div class="footer">수업 흐름: 관찰 → 기록 → 규칙 발견 → 일반화 → 새로운 문제에 적용</div>
+
+<script>
+const canvas=document.getElementById("canvas"),ctx=canvas.getContext("2d"),range=document.getElementById("nRange");
+function pts(n){const a=[],cx=canvas.width/2,cy=canvas.height/2+15,r=Math.min(canvas.width,canvas.height)*.34;for(let i=0;i<n;i++){const t=-Math.PI/2+i*2*Math.PI/n;a.push({x:cx+r*Math.cos(t),y:cy+r*Math.sin(t)})}return a}
+function draw(){const n=+range.value,p=pts(n);ctx.clearRect(0,0,canvas.width,canvas.height);ctx.beginPath();p.forEach((x,i)=>i?ctx.lineTo(x.x,x.y):ctx.moveTo(x.x,x.y));ctx.closePath();ctx.fillStyle="#eef5ff";ctx.fill();ctx.strokeStyle="#8b97aa";ctx.lineWidth=2.3;for(let i=2;i<n-1;i++){ctx.beginPath();ctx.moveTo(p[0].x,p[0].y);ctx.lineTo(p[i].x,p[i].y);ctx.stroke()}ctx.beginPath();p.forEach((x,i)=>i?ctx.lineTo(x.x,x.y):ctx.moveTo(x.x,x.y));ctx.closePath();ctx.strokeStyle="#196ae3";ctx.lineWidth=4;ctx.stroke();p.forEach((x,i)=>{ctx.beginPath();ctx.arc(x.x,x.y,7,0,Math.PI*2);ctx.fillStyle="#172033";ctx.fill();ctx.font="bold 15px sans-serif";ctx.fillStyle="#172033";ctx.fillText(String.fromCharCode(65+i),x.x+10,x.y-10)});ctx.font="bold 17px sans-serif";ctx.fillStyle="#536078";ctx.fillText("A에서 대각선을 그어 삼각형으로 나눈 모습",24,31)}
+function update(){const n=+range.value,tri=n-2,sum=tri*180,diag=n-3;document.getElementById("nText").textContent=n;document.getElementById("nVal").textContent=n;document.getElementById("triVal").textContent=tri;document.getElementById("sumVal").textContent=sum+"°";document.getElementById("diagVal").textContent=diag+"개";draw()}range.addEventListener("input",update);
+function showPage(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");btn.classList.add("active");window.scrollTo({top:0,behavior:"smooth"})}
+function checkTable(){const ans={t3:1,s3:180,t4:2,s4:360,t5:3,s5:540,t6:4,s6:720};let ok=0;Object.keys(ans).forEach(id=>{if(Number(document.getElementById(id).value)===ans[id])ok++});const f=document.getElementById("tableFeedback");f.textContent=ok===8?"🎉 모두 정확합니다! 이제 규칙을 일반화해 보세요.":`현재 ${ok}/8개가 맞습니다. 그림을 다시 관찰해 보세요.`;f.style.color=ok===8?"var(--green)":"var(--red)"}
+function clearTable(){document.querySelectorAll("#record input").forEach(x=>x.value="");document.getElementById("tableFeedback").textContent=""}
+function revealRule(){document.getElementById("blank1").textContent="n−2";document.getElementById("blank2").textContent="n−2";document.getElementById("ruleFeedback").textContent="✓ 규칙: n각형은 n−2개의 삼각형으로 나뉘므로 내각의 합은 (n−2)×180°입니다.";document.getElementById("ruleFeedback").style.color="var(--green)"}
+function checkQ(n,id,fid){const correct=(n-2)*180,a=Number(document.getElementById(id).value),f=document.getElementById(fid);f.textContent=a===correct?"🎉 정답입니다! (n−2)×180°를 적용했습니다.":"다시 생각해 보세요. 먼저 n−2를 계산해 보세요.";f.style.color=a===correct?"var(--green)":"var(--red)"}
+function checkN(){const a=Number(document.getElementById("qN").value),f=document.getElementById("fN");f.textContent=a===9?"🎉 정답! (n−2)×180=1260에서 n=9입니다.":"힌트: (n−2)×180=1260으로 식을 세워 보세요.";f.style.color=a===9?"var(--green)":"var(--red)"}
+update();
+</script>
+</body>
+</html>
